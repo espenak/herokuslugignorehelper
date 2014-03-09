@@ -102,9 +102,20 @@ def bytes_to_mb(bytes):
 
 
 def cli():
-    parser = argparse.ArgumentParser(description='Create and show the results of ignore files.')
-    parser.add_argument('action', metavar='ACTION')
-    parser.add_argument('slugignorefile', metavar='SLUGIGNORE', default='.slugignore')
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description='Helpers for testing Heroku .slugignore files.',
+        epilog="""Actions:
+
+   listignored
+      List ignored files.
+   diskspace
+      Show/calculate saved diskspace.
+""")
+    parser.add_argument('action', metavar='action',
+        help='An action. Possible actions are listed below.')
+    parser.add_argument('slugignorefile', metavar='slugignorefile', default='.slugignore',
+        help='Path to a .slugignore file. Defaults to ".slugignore".')
 
     args = parser.parse_args()
     slugignore = SlugIgnore(args.slugignorefile)
