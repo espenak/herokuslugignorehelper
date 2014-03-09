@@ -114,7 +114,8 @@ def cli():
 """)
     parser.add_argument('action', metavar='action',
         help='An action. Possible actions are listed below.')
-    parser.add_argument('slugignorefile', metavar='slugignorefile', default='.slugignore',
+    parser.add_argument('slugignorefile', metavar='slugignorefile',
+        default='.slugignore', nargs='?',
         help='Path to a .slugignore file. Defaults to ".slugignore".')
 
     args = parser.parse_args()

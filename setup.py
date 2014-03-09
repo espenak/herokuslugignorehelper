@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = "herokuslugignorehelper",
-    version = "0.1",
+    version = "0.2",
     license = 'BSD',
     url = 'https://github.com/espenak/herokuslugignorehelper',
     author = 'Espen Angell Kristiansen',
