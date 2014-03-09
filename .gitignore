@@ -1,0 +1,6 @@
+herokuslugignorehelper.egg-info
+*.pyc
+*.pyo
+.*.swp
+*~
+.DS_Store
