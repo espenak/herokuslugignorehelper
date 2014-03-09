@@ -12,11 +12,13 @@ class PatternParser(object):
 
     def _normalize_pattern(self, pattern):
         if pattern.startswith('/'):
-            pattern = os.path.join(self.rootdir, pattern)
+            pattern = os.path.join(self.rootdir, pattern[1:])
+        if pattern.endswith('/'):
+            pattern = pattern[:-1]
         return pattern
 
     def match(self, basename, path):
-        return fnmatch(basename, self.pattern) or fnmatch(basename, path)
+        return fnmatch(basename, self.pattern) or fnmatch(path, self.pattern)
 
     def __str__(self):
         return self.pattern
@@ -24,14 +26,20 @@ class PatternParser(object):
 
 class Patterns(object):
     def __init__(self, patterns, rootdir):
-        self.patternparsers = [PatternParser(pattern, rootdir) \
-            for pattern in patterns.split('\n')]
+        self.patternparsers = []
+        for pattern in patterns.split('\n'):
+            if pattern.startswith('#') or pattern.strip() == '':
+                continue
+            self.patternparsers.append(PatternParser(pattern, rootdir))
 
     def match(self, basename, path):
         for patternparser in self.patternparsers:
             if patternparser.match(basename, path):
                 return True
         return False
+
+    def __str__(self):
+        return '\n'.join([str(pattern) for pattern in self.patternparsers])
 
 
 class IgnoredBase(object):
@@ -111,5 +119,7 @@ def cli():
             print '{:7.3f}Mb {}'.format(bytes_to_mb(diskspace), ignoredfile)
             ignored_diskspace += diskspace
         print 'Ignored {:.1f}Mb in total'.format(bytes_to_mb(ignored_diskspace))
+    elif args.action == 'parsedpatterns':
+        print slugignore.patterns
     else:
-        raise SystemExit('Invalid action. Use one of: listignored, diskspace')
+        raise SystemExit('Invalid action. Use one of: listignored, diskspace, parsedpatterns')
